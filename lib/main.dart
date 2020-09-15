@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:personal_expenses/models/transaction.dart';
+import 'package:personal_expenses/ui/Transactions.dart';
 import 'package:personal_expenses/ui/transaction_modal.dart';
+import './providers/transactionlist.dart';
+import 'package:provider/provider.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: MyHomePage(),
+    return ChangeNotifierProvider(
+      create: (ctx) {
+        return TransactionList();
+      },
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: MyHomePage(),
+      ),
     );
   }
 }
@@ -20,11 +27,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> transactions = [];
+  //final List<Transaction> transactionList = [];
   void modalshower(BuildContext ctx) {
     showModalBottomSheet(
         context: ctx,
         builder: (_) {
+          //return TransactionModal(transactionList: transactionList);
           return TransactionModal();
         });
   }
@@ -35,7 +43,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text('Expenses'),
       ),
-      body: Text('hi'),
+      body: Transactions(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),

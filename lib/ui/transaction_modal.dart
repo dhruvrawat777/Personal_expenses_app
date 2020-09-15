@@ -1,9 +1,12 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:personal_expenses/models/transaction.dart';
+import 'package:personal_expenses/providers/transactionlist.dart';
+import 'package:provider/provider.dart';
 
 class TransactionModal extends StatefulWidget {
+  // final List<Transaction> transactionList;
+  // TransactionModal({this.transactionList});
   @override
   _TransactionModalState createState() => _TransactionModalState();
 }
@@ -49,12 +52,16 @@ class _TransactionModalState extends State<TransactionModal> {
   final amountcontroller = TextEditingController();
   final titlecontroller = TextEditingController();
 
-  void addtransaction() {
-    Transaction(
-      id: DateTime.now().toString(),
-      amount: double.parse(amountcontroller.text),
-      date: date,
-      title: titlecontroller.text,
+  void addtransaction(BuildContext ctx) {
+    final transactionData =
+        Provider.of<TransactionList>(context, listen: false);
+    transactionData.addTransaction(
+      Transaction(
+        id: DateTime.now().toString(),
+        amount: double.parse(amountcontroller.text),
+        date: date,
+        title: titlecontroller.text,
+      ),
     );
   }
 
@@ -96,6 +103,9 @@ class _TransactionModalState extends State<TransactionModal> {
 
   @override
   Widget build(BuildContext context) {
+    // final transactionData = Provider.of<TransactionList>(context);
+    // final transactionlist = transactionData.transactions;
+    // transactionlist.add(Transaction(amount: 5,date: DateTime.now(),id: DateTime.now().toString(),title: 'hi');
     return Column(
       children: [
         fieldmaker('Title', titlecontroller),
@@ -130,7 +140,8 @@ class _TransactionModalState extends State<TransactionModal> {
                 child: Text('Add Transaction'),
                 onPressed: () {
                   if (validator()) {
-                    addtransaction();
+                    addtransaction(context);
+
                     Navigator.pop(context);
                   } else {
                     showDialog(
