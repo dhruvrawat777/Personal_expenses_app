@@ -37,11 +37,21 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
+  Widget fab() {}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Expenses'),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              modalshower(context);
+            },
+          ),
+        ],
       ),
       body: Transactions(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
