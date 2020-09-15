@@ -13,4 +13,17 @@ class TransactionList with ChangeNotifier {
     _transactionList.add(x);
     notifyListeners();
   }
+
+  double total() {
+    double x = 0;
+    for (int i = 0; i < _transactionList.length; ++i) {
+      x += _transactionList[i].amount;
+    }
+    return double.parse((x).toStringAsFixed(3));
+  }
+
+  void deleter(String id) {
+    _transactionList.removeWhere((element) => element.id == id);
+    notifyListeners();
+  }
 }

@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
+
 import 'package:provider/provider.dart';
 import '../providers/transactionlist.dart';
 
 class Transactions extends StatelessWidget {
   // final List<Transaction> transactionList;
   //Transactions({@required this.transactionList});
+  double getexpense(BuildContext ctx) {
+    final pro = Provider.of<TransactionList>(ctx);
+    return pro.total();
+  }
+
+  void deleter(BuildContext ctx, String id) {
+    final pro = Provider.of<TransactionList>(ctx, listen: false);
+    pro.deleter(id);
+  }
+
   @override
   Widget build(BuildContext context) {
     final td = Provider.of<TransactionList>(context);
@@ -12,8 +23,21 @@ class Transactions extends StatelessWidget {
     print(transactionlist);
     return Column(
       children: [
-        Card(
-          child: Text('hgi'),
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.black),
+          ),
+          width: double.infinity,
+          alignment: Alignment.centerLeft,
+          padding: EdgeInsets.only(left: 10),
+          height: 100,
+          child: Text(
+            'Total Expenses:' + getexpense(context).toString(),
+            style: TextStyle(
+              color: Colors.orange,
+              fontSize: 35,
+            ),
+          ),
         ),
         Expanded(
           //height: MediaQuery.of(context).size.height - 50,
@@ -31,6 +55,7 @@ class Transactions extends StatelessWidget {
                 child: ListTile(
                   leading: Icon(
                     Icons.account_box,
+                    color: Colors.amber,
                     size: 80,
                   ),
                   title: Container(
@@ -45,6 +70,19 @@ class Transactions extends StatelessWidget {
                   subtitle: Text(
                     'Rs: ' + transactionlist[index].amount.toString(),
                     style: TextStyle(fontSize: 20),
+                  ),
+                  trailing: Container(
+                    padding: EdgeInsets.only(top: 12),
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.delete,
+                        size: 40,
+                      ),
+                      color: Colors.red,
+                      onPressed: () {
+                        deleter(ctx, transactionlist[index].id);
+                      },
+                    ),
                   ),
                 ),
               );
