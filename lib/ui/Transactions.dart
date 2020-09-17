@@ -24,70 +24,85 @@ class Transactions extends StatelessWidget {
     return Column(
       children: [
         Container(
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.black),
-          ),
           width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.blue,
+            borderRadius: BorderRadius.circular(25),
+            /* BorderRadius.only(
+              bottomLeft: Radius.circular(25),
+              bottomRight: Radius.circular(25), */
+          ),
           alignment: Alignment.centerLeft,
-          padding: EdgeInsets.only(left: 10),
+          margin: EdgeInsets.only(top: 1),
+          padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
           height: 100,
           child: Text(
             'Total Expenses:' + getexpense(context).toString(),
             style: TextStyle(
-              color: Colors.orange,
-              fontSize: 35,
+              color: Colors.white,
+              fontSize: 30,
             ),
           ),
         ),
         Expanded(
           //height: MediaQuery.of(context).size.height - 50,
-          child: ListView.separated(
-            separatorBuilder: (ctx, index) {
-              return Divider(
-                color: Colors.black54,
-              );
-            },
-            itemBuilder: (ctx, index) {
-              //return Text(transactionlist[index].amount.toString());
-              return Container(
-                width: 200,
-                height: 100,
-                child: ListTile(
-                  leading: Icon(
-                    Icons.account_box,
-                    color: Colors.amber,
-                    size: 80,
-                  ),
-                  title: Container(
-                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                    child: Text(
-                      transactionlist[index].title,
-                      style: TextStyle(
-                        fontSize: 35,
-                      ),
-                    ),
-                  ),
-                  subtitle: Text(
-                    'Rs: ' + transactionlist[index].amount.toString(),
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  trailing: Container(
-                    padding: EdgeInsets.only(top: 12),
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.delete,
-                        size: 40,
-                      ),
-                      color: Colors.red,
-                      onPressed: () {
-                        deleter(ctx, transactionlist[index].id);
-                      },
-                    ),
-                  ),
+          child: Container(
+            decoration: BoxDecoration(
+                //color: Colors.lime,
+                //border: Border.all(color: Colors.black),
+                // borderRadius: BorderRadius.circular(25),
                 ),
-              );
-            },
-            itemCount: transactionlist.length,
+            child: ListView.separated(
+              separatorBuilder: (ctx, index) {
+                return Divider(
+                  color: Colors.black54,
+                );
+              },
+              itemBuilder: (ctx, index) {
+                //return Text(transactionlist[index].amount.toString());
+                return Container(
+                  width: 200,
+                  height: 100,
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.account_box,
+                      color: Colors.blue,
+                      size: 80,
+                    ),
+                    title: Container(
+                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: Text(
+                        transactionlist[index].title,
+                        style: TextStyle(
+                          fontSize: 25,
+                        ),
+                      ),
+                    ),
+                    subtitle: Text(
+                      'Rs: ' + transactionlist[index].amount.toString(),
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    trailing: Container(
+                      padding: EdgeInsets.only(top: 12),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.delete,
+                          size: 40,
+                        ),
+                        color: Colors.red,
+                        onPressed: () {
+                          deleter(ctx, transactionlist[index].id);
+                        },
+                      ),
+                    ),
+                  ),
+                );
+              },
+              itemCount: transactionlist.length,
+            ),
           ),
         ),
       ],

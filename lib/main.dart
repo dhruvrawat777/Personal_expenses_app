@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
         return TransactionList();
       },
       child: MaterialApp(
+        theme: ThemeData.dark(),
         debugShowCheckedModeBanner: false,
         home: MyHomePage(),
       ),
@@ -36,8 +37,6 @@ class _MyHomePageState extends State<MyHomePage> {
           return TransactionModal();
         });
   }
-
-  Widget fab() {}
 
   @override
   Widget build(BuildContext context) {
