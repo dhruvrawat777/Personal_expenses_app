@@ -119,6 +119,7 @@ class _TransactionModalState extends State<TransactionModal> {
         // fieldmaker('Title', titlecontroller),
         // fieldmaker('Amount', amountcontroller),
         TextFormField(
+          controller: titlecontroller,
           decoration: InputDecoration(
             labelText: 'Title',
           ),
@@ -128,6 +129,7 @@ class _TransactionModalState extends State<TransactionModal> {
           },
         ),
         TextFormField(
+          controller: amountcontroller,
           decoration: InputDecoration(labelText: 'Amount'),
           textInputAction: TextInputAction.done,
           keyboardType: TextInputType.number,
