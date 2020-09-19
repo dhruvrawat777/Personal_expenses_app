@@ -101,6 +101,14 @@ class _TransactionModalState extends State<TransactionModal> {
     );
   }
 
+  final _f = FocusNode();
+
+  @override
+  void dispose() {
+    _f.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     // final transactionData = Provider.of<TransactionList>(context);
@@ -108,8 +116,23 @@ class _TransactionModalState extends State<TransactionModal> {
     // transactionlist.add(Transaction(amount: 5,date: DateTime.now(),id: DateTime.now().toString(),title: 'hi');
     return Column(
       children: [
-        fieldmaker('Title', titlecontroller),
-        fieldmaker('Amount', amountcontroller),
+        // fieldmaker('Title', titlecontroller),
+        // fieldmaker('Amount', amountcontroller),
+        TextFormField(
+          decoration: InputDecoration(
+            labelText: 'Title',
+          ),
+          textInputAction: TextInputAction.next,
+          onFieldSubmitted: (_) {
+            FocusScope.of(context).requestFocus(_f);
+          },
+        ),
+        TextFormField(
+          decoration: InputDecoration(labelText: 'Amount'),
+          textInputAction: TextInputAction.done,
+          keyboardType: TextInputType.number,
+          focusNode: _f,
+        ),
         Container(
           margin: EdgeInsets.all(20),
           alignment: Alignment.centerLeft,
