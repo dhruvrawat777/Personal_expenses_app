@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:personal_expenses/models/transaction.dart';
 import 'package:personal_expenses/providers/transactionlist.dart';
 import 'package:provider/provider.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class TransactionModal extends StatefulWidget {
   // final List<Transaction> transactionList;
@@ -12,28 +14,6 @@ class TransactionModal extends StatefulWidget {
 }
 
 class _TransactionModalState extends State<TransactionModal> {
-  Widget fieldmaker(String title, TextEditingController controller) {
-    return Container(
-      width: double.infinity,
-      height: 50,
-      padding: EdgeInsets.symmetric(
-        horizontal: 10,
-      ),
-      child: TextField(
-        controller: controller,
-        keyboardType:
-            title == 'Amount' ? TextInputType.number : TextInputType.name,
-        decoration: InputDecoration(
-          hintText: title,
-          hintStyle: TextStyle(
-            fontSize: 20,
-          ),
-          contentPadding: EdgeInsets.all(2),
-        ),
-      ),
-    );
-  }
-
   String dt = '';
   DateTime date = DateTime.now();
   void showdatepicker(BuildContext context) async {
@@ -52,17 +32,60 @@ class _TransactionModalState extends State<TransactionModal> {
   final amountcontroller = TextEditingController();
   final titlecontroller = TextEditingController();
 
-  void addtransaction(BuildContext ctx) {
+  void addtransaction(BuildContext ctx) async {
     final transactionData =
         Provider.of<TransactionList>(context, listen: false);
-    transactionData.addTransaction(
-      Transaction(
-        id: DateTime.now().toString(),
+    /*  Transaction x = Transaction(
+      //id: DateTime.now().toString(),
+      amount: double.parse(amountcontroller.text),
+      date: date,
+      title: titlecontroller.text,
+    ); */
+
+    const url = 'https://apps-8d36b.firebaseio.com/transactions.json';
+    try {
+      final response = await http.post(
+        url,
+        body: json.encode({
+          'title': titlecontroller.text,
+          'amount': double.parse(amountcontroller.text),
+          'date': date.toIso8601String(),
+        }),
+      );
+      print('hi');
+      print(response.body);
+      var data = json.decode(response.body);
+
+      Transaction x = Transaction(
+        id: data['name'].toString(),
         amount: double.parse(amountcontroller.text),
         date: date,
         title: titlecontroller.text,
-      ),
-    );
+      );
+
+      transactionData.addTransaction(x);
+    } catch (error) {
+      print(error);
+    }
+    /*  .then((response) {
+      print(response.body);
+      transactionData.addTransaction(x);
+    }).catchError((error) {
+      return showDialog<Null>(
+          context: ctx,
+          builder: (ct) => AlertDialog(
+                title: Text('Error occured'),
+                content: Text('Someting went wrong!'),
+                actions: [
+                  FlatButton(
+                    child: Text('Okay'),
+                    onPressed: () {
+                      Navigator.of(ct).pop();
+                    },
+                  )
+                ],
+              ));
+    }); */
   }
 
   bool validator() {
@@ -119,6 +142,12 @@ class _TransactionModalState extends State<TransactionModal> {
         // fieldmaker('Title', titlecontroller),
         // fieldmaker('Amount', amountcontroller),
         TextFormField(
+          validator: (value) {
+            if (value.isEmpty) {
+              return 'Enter title!';
+            } else
+              return null;
+          },
           controller: titlecontroller,
           decoration: InputDecoration(
             labelText: 'Title',
@@ -130,6 +159,16 @@ class _TransactionModalState extends State<TransactionModal> {
         ),
         TextFormField(
           controller: amountcontroller,
+          validator: (value) {
+            if (value.isEmpty)
+              return 'Enger price!';
+            else if (double.tryParse(value) == null)
+              return 'Enter valid number!';
+            else if (double.parse(value) <= 0)
+              return 'Enter value greater than zero!';
+            else
+              return null;
+          },
           decoration: InputDecoration(labelText: 'Amount'),
           textInputAction: TextInputAction.done,
           keyboardType: TextInputType.number,
@@ -166,8 +205,7 @@ class _TransactionModalState extends State<TransactionModal> {
                 onPressed: () {
                   if (validator()) {
                     addtransaction(context);
-
-                    Navigator.pop(context);
+                    Navigator.of(context).pop();
                   } else {
                     showDialog(
                       context: context,

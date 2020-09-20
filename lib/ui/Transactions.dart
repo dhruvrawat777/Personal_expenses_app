@@ -3,9 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/transactionlist.dart';
 
-class Transactions extends StatelessWidget {
+class Transactions extends StatefulWidget {
   // final List<Transaction> transactionList;
   //Transactions({@required this.transactionList});
+  @override
+  _TransactionsState createState() => _TransactionsState();
+}
+
+class _TransactionsState extends State<Transactions> {
   double getexpense(BuildContext ctx) {
     final pro = Provider.of<TransactionList>(ctx);
     return pro.total();
@@ -13,7 +18,19 @@ class Transactions extends StatelessWidget {
 
   void deleter(BuildContext ctx, String id) {
     final pro = Provider.of<TransactionList>(ctx, listen: false);
-    pro.deleter(id);
+    pro.deleteTransaction(id);
+  }
+
+  var _isInit = true;
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      final x = Provider.of<TransactionList>(context);
+      x.fetchAndSet();
+    }
+    _isInit = false;
+
+    super.didChangeDependencies();
   }
 
   @override
@@ -94,7 +111,9 @@ class Transactions extends StatelessWidget {
                         ),
                         color: Colors.red,
                         onPressed: () {
-                          deleter(ctx, transactionlist[index].id);
+                          final pro = Provider.of<TransactionList>(context,
+                              listen: false);
+                          pro.deleteTransaction(transactionlist[index].id);
                         },
                       ),
                     ),

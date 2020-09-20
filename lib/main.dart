@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:personal_expenses/models/transaction.dart';
 import 'package:personal_expenses/ui/Transactions.dart';
 import 'package:personal_expenses/ui/transaction_modal.dart';
 import './providers/transactionlist.dart';
@@ -38,6 +39,11 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
+  Future<void> _refreshList() async {
+    Provider.of<TransactionList>(context, listen: false).eraser();
+    await Provider.of<TransactionList>(context, listen: false).fetchAndSet();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +58,12 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: Transactions(),
+      body: RefreshIndicator(
+        onRefresh: () {
+          return _refreshList();
+        },
+        child: Transactions(),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
